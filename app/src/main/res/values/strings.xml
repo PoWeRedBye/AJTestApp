@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Currency Rates</string>
+    <string name="convert">Convert</string>
+    <string name="some_currency">Some Currency (SC):</string>
+    <string name="some_curency_value">0</string>
+    <string name="converter_history">History of conversion</string>
+    <string name="complete_ticker_menu">Converter with Market sellers</string>
+    <string name="some_currency_name">Some Currency Name</string>
+    <string name="some_currency_code">(SCC)</string>
+    <string name="enter_currency_code">Enter Currency Code</string>
+    <string name="enter_a_base_currency_value">Enter a base currency value</string>
+    <string name="simple_activity">Simple Converter</string>
+    <string name="some_market">Some Market</string>
+    <string name="market_price">Market Price:</string>
+    <string name="market_voume">Market Volume:</string>
+    <string name="market_name">Market name:</string>
+    <string name="enter_base_currency">please enter a base currency</string>
+    <string name="enter_target_currency">please enter a target currency</string>
+    <string name="no_stores_found">Im sorry! No stores found</string>
+    <string name="stores_not_available">Market list is not available</string>
+    <string name="some_time">Some Time</string>
+    <string name="base_currency">Base currency:</string>
+    <string name="target_currency_price">Target currency price:</string>
+    <string name="target_currency">Target currency:</string>
+    <string name="currency_activity">Select currency</string>
+    <string name="market_list">Market List:</string>
+</resources>

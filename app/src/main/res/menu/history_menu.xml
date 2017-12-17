@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/simple_ticker_history_activity_menu_btn"
+        android:orderInCategory="100"
+        android:title="@string/simple_activity"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/complete_ticker_history_activity_menu_btn"
+        android:orderInCategory="100"
+        android:title="@string/complete_ticker_menu"
+        app:showAsAction="never" />
+
+</menu>
