@@ -44,9 +44,12 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
             @Override
             public void onResponse(Call<CompleteTickerExample> call, Response<CompleteTickerExample> response) {
                 if(response.isSuccessful()){
-                    completeTickerExample = response.body();
-                    convert(completeTickerExample,value);
-
+                    if (response.body().getSuccess()){
+                        completeTickerExample = response.body();
+                        convert(completeTickerExample,value);
+                    } else {
+                        view.callbackErrorMessage(response.body().getError());
+                    }
                 }else {
                     view.callbackErrorMessage(response.message());
                 }

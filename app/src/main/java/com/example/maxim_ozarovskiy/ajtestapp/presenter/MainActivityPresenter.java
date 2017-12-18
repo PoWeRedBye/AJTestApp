@@ -41,8 +41,12 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
             @Override
             public void onResponse(Call<SimpleTickerExample> call, Response<SimpleTickerExample> response) {
                 if(response.isSuccessful()){
-                    simpleTickerExample = response.body();
-                    convert(simpleTickerExample,value);
+                    if (response.body().getSuccess()){
+                        simpleTickerExample = response.body();
+                        convert(simpleTickerExample,value);
+                    } else {
+                        view.callbackErrorMessage(response.body().getError());
+                    }
                 }else {
                     view.callbackErrorMessage(response.message());
                 }

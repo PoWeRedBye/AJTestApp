@@ -81,6 +81,8 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
         convertBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                errorTv.setText("");
+                marketsError.setText("");
                 String value = baseCurrencyValueEt.getText().toString();
                 if(TextUtils.isEmpty(baseCurrencyName)){
                     Toast.makeText(getApplicationContext(),R.string.enter_base_currency, Toast.LENGTH_LONG).show();

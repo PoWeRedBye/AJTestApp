@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         convertBtn.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(android.view.View view) {
+                errorTv.setText("");
                 String value = baseCurrencyValueEt.getText().toString();
                 if (TextUtils.isEmpty(baseCurrencyName)) {
                     Toast.makeText(getApplicationContext(), R.string.enter_base_currency, Toast.LENGTH_LONG).show();
