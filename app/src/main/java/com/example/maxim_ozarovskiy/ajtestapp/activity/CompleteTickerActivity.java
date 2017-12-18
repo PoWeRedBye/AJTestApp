@@ -209,14 +209,14 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
     }
 
     private void checkBaseCurrencyType() {
-        targetCurrencyValueTv.setText(R.string.some_curency_value);
+        targetCurrencyValueTv.setText(R.string.some_currency_value);
         Intent intent = new Intent(this, TargetBaseCurrencyActivity.class);
         intent.putExtra("Intent", 2);
         startActivityForResult(intent, 3);
     }
 
     private void checkTargetCurrencyType() {
-        targetCurrencyValueTv.setText(R.string.some_curency_value);
+        targetCurrencyValueTv.setText(R.string.some_currency_value);
         Intent intent = new Intent(this, TargetBaseCurrencyActivity.class);
         intent.putExtra("Intent", 2);
         startActivityForResult(intent, 4);

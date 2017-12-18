@@ -168,14 +168,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     private void checkBaseCurrencyType() {
-        targetCurrencyValueTv.setText(R.string.some_curency_value);
+        targetCurrencyValueTv.setText(R.string.some_currency_value);
         Intent intent = new Intent(this, TargetBaseCurrencyActivity.class);
         intent.putExtra("Intent", 1);
         startActivityForResult(intent, 1);
     }
 
     private void checkTargetCurrencyType() {
-        targetCurrencyValueTv.setText(R.string.some_curency_value);
+        targetCurrencyValueTv.setText(R.string.some_currency_value);
         Intent intent = new Intent(this, TargetBaseCurrencyActivity.class);
         intent.putExtra("Intent", 1);
         startActivityForResult(intent, 2);

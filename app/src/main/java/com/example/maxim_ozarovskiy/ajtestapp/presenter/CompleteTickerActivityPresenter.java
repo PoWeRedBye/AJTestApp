@@ -2,6 +2,7 @@ package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
 import android.content.Context;
 
+import com.example.maxim_ozarovskiy.ajtestapp.R;
 import com.example.maxim_ozarovskiy.ajtestapp.data.DataManager;
 import com.example.maxim_ozarovskiy.ajtestapp.interfaces.CompleteTickerActivityContract;
 import com.example.maxim_ozarovskiy.ajtestapp.model.CompleteTickerExample;
@@ -69,7 +70,7 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
         SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
         String formattedDate = format.format(time);
         marketList = cte.getCompleteTicker().getMarkets();
-        sendDataToDB(convertedValue,value,cte,formattedDate);
+        sendDataToDB(convertedValue, value, cte, formattedDate);
         view.callbackConversionRequest(convertedValue, marketList);
     }
 
