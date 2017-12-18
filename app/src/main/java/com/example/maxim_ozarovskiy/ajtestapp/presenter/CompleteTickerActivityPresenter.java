@@ -44,12 +44,7 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
             public void onResponse(Call<CompleteTickerExample> call, Response<CompleteTickerExample> response) {
                 if(response.isSuccessful()){
                     completeTickerExample = response.body();
-                    if (response.body().getCompleteTicker().getMarkets() == null){
-                        convert(completeTickerExample,value);
-                    }else{
-                        marketList = response.body().getCompleteTicker().getMarkets();
-                        convert(completeTickerExample,value);
-                    }
+                    convert(completeTickerExample,value);
 
                 }else {
                     view.callbackErrorMessage(response.message());
@@ -73,6 +68,7 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
         time.setTime(date * 1000);
         SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
         String formattedDate = format.format(time);
+        marketList = cte.getCompleteTicker().getMarkets();
         sendDataToDB(convertedValue,value,cte,formattedDate);
         view.callbackConversionRequest(convertedValue, marketList);
     }
