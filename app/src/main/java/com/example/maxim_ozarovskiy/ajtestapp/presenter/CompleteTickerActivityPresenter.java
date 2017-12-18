@@ -44,8 +44,13 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
             public void onResponse(Call<CompleteTickerExample> call, Response<CompleteTickerExample> response) {
                 if(response.isSuccessful()){
                     completeTickerExample = response.body();
-                    marketList = response.body().getCompleteTicker().getMarkets();
-                    convert(completeTickerExample,value);
+                    if (response.body().getCompleteTicker().getMarkets() == null){
+                        convert(completeTickerExample,value);
+                    }else{
+                        marketList = response.body().getCompleteTicker().getMarkets();
+                        convert(completeTickerExample,value);
+                    }
+
                 }else {
                     view.callbackErrorMessage(response.message());
                 }
