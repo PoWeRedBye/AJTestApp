@@ -52,6 +52,10 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
     private String targetCurrencyName;
     private String targetCurrencyCode;
 
+    private static int RESULT_CODE = 2;
+    private static int BASE_CURRENCY_REQUEST_CODE = 3;
+    private static int TARGET_CURRENCY_REQUEST_CODE = 4;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -213,15 +217,15 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
     private void checkBaseCurrencyType() {
         targetCurrencyValueTv.setText(R.string.some_currency_value);
         Intent intent = new Intent(this, TargetBaseCurrencyActivity.class);
-        intent.putExtra("Intent", 2);
-        startActivityForResult(intent, 3);
+        intent.putExtra("Intent", RESULT_CODE);
+        startActivityForResult(intent, BASE_CURRENCY_REQUEST_CODE);
     }
 
     private void checkTargetCurrencyType() {
         targetCurrencyValueTv.setText(R.string.some_currency_value);
         Intent intent = new Intent(this, TargetBaseCurrencyActivity.class);
-        intent.putExtra("Intent", 2);
-        startActivityForResult(intent, 4);
+        intent.putExtra("Intent", RESULT_CODE);
+        startActivityForResult(intent, TARGET_CURRENCY_REQUEST_CODE);
     }
 
     @Override
@@ -230,13 +234,13 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
         if (data == null) {
             return;
         }
-        if (requestCode == 3) {
+        if (requestCode == BASE_CURRENCY_REQUEST_CODE) {
             baseCurrency = data.getParcelableExtra("CurrencyTypes");
             baseCurrencyName = baseCurrency.getName();
             baseCurrencyCode = baseCurrency.getCode();
             setBaseCurrencyName();
 
-        } else if (requestCode == 4) {
+        } else if (requestCode == TARGET_CURRENCY_REQUEST_CODE) {
             targetCurency = data.getParcelableExtra("CurrencyTypes");
             targetCurrencyName = targetCurency.getName();
             targetCurrencyCode = targetCurency.getCode();
