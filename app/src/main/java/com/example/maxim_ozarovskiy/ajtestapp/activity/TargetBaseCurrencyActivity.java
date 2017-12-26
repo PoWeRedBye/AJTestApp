@@ -38,6 +38,12 @@ public class TargetBaseCurrencyActivity extends AppCompatActivity implements Tar
     private String searchInputText;
     private Button refresh;
 
+    private static int SIMPLE_REQUEST = 1;
+    private static int SIMPLE_RESULT = 1;
+    private static int COMPLETE_REQUEST = 2;
+    private static int COMPLETE_RESULT = 2;
+
+
     private TargetBaseCurrencyActivityPresenter presenter;
 
     @Override
@@ -153,15 +159,15 @@ public class TargetBaseCurrencyActivity extends AppCompatActivity implements Tar
     public void currencyItemClick(CurrencyTypes currencyTypes, int position) {
         Bundle request = getIntent().getExtras();
         int requestNumber = request.getInt("Intent");
-        if(requestNumber == 1) {
+        if(requestNumber == SIMPLE_REQUEST) {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("CurrencyTypes", currencyTypes);
-            setResult(1, intent);
+            setResult(SIMPLE_RESULT, intent);
             finish();
-        } else if (requestNumber == 2){
+        } else if (requestNumber == COMPLETE_REQUEST){
             Intent intent = new Intent(this, CompleteTickerActivity.class);
             intent.putExtra("CurrencyTypes", currencyTypes);
-            setResult(1,intent);
+            setResult(COMPLETE_RESULT,intent);
             finish();
         }
     }

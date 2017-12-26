@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     private void initUI() {
+        setTitle(R.string.simple_activity);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.main_activity);
         checkBaseCurrencyBtn = findViewById(R.id.check_base_currency_simple_ticker_activity);
         checkTargetCurrencyBtn = findViewById(R.id.check_target_currency_simple_ticker_activity);
         convertBtn = findViewById(R.id.convert_btn_simple_ticker_activity);
@@ -169,31 +171,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private void startCompleteTickerActivity() {
         Intent intent = new Intent(getApplicationContext(), CompleteTickerActivity.class);
         startActivity(intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.simple_ticker_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.history_activity_simple_ticker_activity_menu_btn) {
-            startHistoryActivity();
-            return true;
-        } else if (id == R.id.complete_ticker_simple_ticker_activity_menu_btn) {
-            startCompleteTickerActivity();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void checkBaseCurrencyType() {

@@ -65,10 +65,7 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.complete_ticker_activity);
         initUI();
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+
         presenter = new CompleteTickerActivityPresenter(this, this);
 
         checkBaseCurrencyBtn.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +129,9 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
     }
 
    private void initUI(){
+       setTitle(R.string.complete_ticker_menu);
        bottomNavigationView = findViewById(R.id.bottom_navigation);
+       bottomNavigationView.setSelectedItemId(R.id.compete_activity);
        checkBaseCurrencyBtn = findViewById(R.id.check_base_currency_complete_ticker_activity);
        checkTargetCurrencyBtn = findViewById(R.id.check_target_currency_complete_ticker_activity);
        convertBtn = findViewById(R.id.convert_btn_complete_ticker_activity);
@@ -189,31 +188,6 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
         errorTv.setText(error);
         setBaseCurrencyName();
         setTargetCurrencyName();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.complete_ticker_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.simple_ticker_complete_ticker_activity_menu_btn) {
-            startSimpleTickerActivity();
-            return true;
-        } else if (id == R.id.history_activity_complete_ticker_activity_menu_btn) {
-            startHistoryActivity();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void startHistoryActivity() {

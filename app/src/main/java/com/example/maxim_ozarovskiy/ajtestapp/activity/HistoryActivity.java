@@ -44,11 +44,6 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
         setContentView(R.layout.history_activity);
         initUI();
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-
         presenter = new HistoryActivityPresenter(this, this);
         showProgressBar();
         presenter.callDbRecords();
@@ -104,7 +99,9 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
     }
 
     private void initUI(){
+        setTitle(R.string.converter_history);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.history_activity);
         refreshBtn = findViewById(R.id.refresh_btn_history_activity);
         errorMsg = findViewById(R.id.error_msg_history_activity);
         recyclerView = findViewById(R.id.history_activity_recycler_view);
@@ -117,31 +114,6 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(historyAdapter);
         historyAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.history_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.simple_ticker_history_activity_menu_btn) {
-            startSimpleTickerActivity();
-            return true;
-        } else if (id == R.id.complete_ticker_history_activity_menu_btn) {
-            startCompleteTickerActivity();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void startCompleteTickerActivity() {

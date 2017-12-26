@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/main_activity"
-        android:icon="@drawable/ic_apps_white_24dp"
+        android:icon="@drawable/ic_home_white_24dp"
         android:title="@string/simple_activity"/>
     <item
         android:id="@+id/history_activity"
