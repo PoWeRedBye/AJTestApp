@@ -27,6 +27,7 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
 
     CompleteTickerActivityContract.View view;
 
+    private String noInet = "No internet connection";
     private String value;
     private CompleteTickerExample completeTickerExample;
     private List<Market> marketList;
@@ -56,7 +57,7 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
             }
             @Override
             public void onFailure(Call<CompleteTickerExample> call, Throwable t) {
-
+                view.callbackErrorMessage(noInet);
             }
         });
     }

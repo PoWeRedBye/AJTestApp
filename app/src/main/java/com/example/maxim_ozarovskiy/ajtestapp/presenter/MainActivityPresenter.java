@@ -3,6 +3,7 @@ package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
 import android.content.Context;
 
+import com.example.maxim_ozarovskiy.ajtestapp.R;
 import com.example.maxim_ozarovskiy.ajtestapp.data.DataManager;
 import com.example.maxim_ozarovskiy.ajtestapp.interfaces.MainActivityContract;
 import com.example.maxim_ozarovskiy.ajtestapp.model.SimpleTickerExample;
@@ -25,6 +26,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     MainActivityContract.View view;
 
+    private String noInet = "No internet connection";
     private String value;
     private SimpleTickerExample simpleTickerExample;
     private Context context;
@@ -53,7 +55,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
             }
             @Override
             public void onFailure(Call<SimpleTickerExample> call, Throwable t) {
-
+                    view.callbackErrorMessage(noInet);
             }
         });
     }

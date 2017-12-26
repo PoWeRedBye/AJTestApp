@@ -2,6 +2,7 @@ package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
 import android.content.Context;
 
+import com.example.maxim_ozarovskiy.ajtestapp.R;
 import com.example.maxim_ozarovskiy.ajtestapp.data.DataManager;
 import com.example.maxim_ozarovskiy.ajtestapp.interfaces.HistoryActivityContract;
 import com.example.maxim_ozarovskiy.ajtestapp.model.DbModelEx;
@@ -31,7 +32,7 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
     private List<DbModelEx> dbList;
     private SimpleTickerExample simpleTickerExample;
 
-
+    private String noInet = "No internet connection";
     private String usd = "usd";
     private String bitcoin = "btc";
     private String euro = "eur";
@@ -75,7 +76,7 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
             }
             @Override
             public void onFailure(Call<SimpleTickerExample> call, Throwable t) {
-
+                view.callbackErrorMsg(noInet);
             }
         });
     }

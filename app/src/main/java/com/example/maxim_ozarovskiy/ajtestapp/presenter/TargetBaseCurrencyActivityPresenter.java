@@ -1,5 +1,6 @@
 package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
+import com.example.maxim_ozarovskiy.ajtestapp.R;
 import com.example.maxim_ozarovskiy.ajtestapp.interfaces.TargetBaseCurrencyActivityContract;
 import com.example.maxim_ozarovskiy.ajtestapp.model.CurrencyTypes;
 import com.example.maxim_ozarovskiy.ajtestapp.model.CurrencyTypesExample;
@@ -20,6 +21,7 @@ public class TargetBaseCurrencyActivityPresenter implements TargetBaseCurrencyAc
 
     TargetBaseCurrencyActivityContract.View view;
 
+    private String noInet = "No internet connection";
     private String searchString;
     private List<CurrencyTypes> currencyList;
     private List<CurrencyTypes> newCurrencyList;
@@ -45,7 +47,7 @@ public class TargetBaseCurrencyActivityPresenter implements TargetBaseCurrencyAc
             }
             @Override
             public void onFailure(Call<CurrencyTypesExample> call, Throwable t) {
-
+                view.callbackHttpError(noInet);
             }
         });
     }

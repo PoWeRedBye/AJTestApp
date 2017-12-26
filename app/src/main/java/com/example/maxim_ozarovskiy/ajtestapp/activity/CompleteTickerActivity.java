@@ -265,7 +265,6 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
             setNewRecyclerAdapter(marketList);
         }
         setConvertedValue(targetValue);
-
     }
 
     @Override
