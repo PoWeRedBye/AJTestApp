@@ -2,7 +2,9 @@ package com.example.maxim_ozarovskiy.ajtestapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +41,7 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
     private TextView targetCurrencyNameTv;
     private TextView errorTv;
     private TextView marketsError;
+    private BottomNavigationView bottomNavigationView;
 
     private CompleteTickerActivityPresenter presenter;
     private RecyclerView recyclerView;
@@ -99,6 +102,24 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
                 }
             }
         });
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.main_activity:
+                                startSimpleTickerActivity();
+                                break;
+                            case R.id.history_activity:
+                                startHistoryActivity();
+                                break;
+                            case R.id.compete_activity:
+                                break;
+                        }
+                        return false;
+                    }
+                });
     }
 
     private void showRecyclerView(){
@@ -111,6 +132,7 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
     }
 
    private void initUI(){
+       bottomNavigationView = findViewById(R.id.bottom_navigation);
        checkBaseCurrencyBtn = findViewById(R.id.check_base_currency_complete_ticker_activity);
        checkTargetCurrencyBtn = findViewById(R.id.check_target_currency_complete_ticker_activity);
        convertBtn = findViewById(R.id.convert_btn_complete_ticker_activity);
@@ -119,7 +141,7 @@ public class CompleteTickerActivity extends AppCompatActivity implements Complet
        baseCurrencyNameTv = findViewById(R.id.base_currency_name_tv_complete_ticker_activity);
        targetCurrencyNameTv = findViewById(R.id.target_currency_name_tv_complete_ticker_activity);
        errorTv = findViewById(R.id.error_message_complete_ticker_activity);
-       recyclerView = findViewById(R.id.recycer_view_complete_ticker_activity);
+       recyclerView = findViewById(R.id.recycler_view_complete_ticker_activity);
        marketsError = findViewById(R.id.markets_error);
    }
 

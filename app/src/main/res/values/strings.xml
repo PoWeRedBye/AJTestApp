@@ -27,4 +27,5 @@
     <string name="history_of_conversion">History of conversions:</string>
     <string name="sorry_not_have_data">Sorry no data please try again later</string>
     <string name="sorry_no_inet">No internet connection</string>
+    <string name="history">History</string>
 </resources>

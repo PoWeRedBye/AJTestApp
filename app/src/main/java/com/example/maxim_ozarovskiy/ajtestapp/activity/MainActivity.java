@@ -2,12 +2,16 @@ package com.example.maxim_ozarovskiy.ajtestapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private TextView baseCurrencyNameTv;
     private TextView targetCurrencyNameTv;
     private TextView errorTv;
+    private BottomNavigationView bottomNavigationView;
 
     private MainActivityPresenter presenter;
 
@@ -82,6 +87,25 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
             }
         });
 
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.main_activity:
+
+                                break;
+                            case R.id.history_activity:
+                                startHistoryActivity();
+                                break;
+                            case R.id.compete_activity:
+                                startCompleteTickerActivity();
+                                break;
+                        }
+                        return false;
+                    }
+                });
+
     }
 
     protected void onSaveInstanceState(Bundle outState) {
@@ -118,6 +142,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     private void initUI() {
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         checkBaseCurrencyBtn = findViewById(R.id.check_base_currency_simple_ticker_activity);
         checkTargetCurrencyBtn = findViewById(R.id.check_target_currency_simple_ticker_activity);
         convertBtn = findViewById(R.id.convert_btn_simple_ticker_activity);

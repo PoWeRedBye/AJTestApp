@@ -2,7 +2,9 @@ package com.example.maxim_ozarovskiy.ajtestapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +36,7 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
     private ProgressBar progressBar;
     private TextView errorMsg;
     private Button refreshBtn;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +59,24 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
                 presenter.callDbRecords();
             }
         });
+        bottomNavigationView.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.main_activity:
+                                startSimpleTickerActivity();
+                                break;
+                            case R.id.history_activity:
+
+                                break;
+                            case R.id.compete_activity:
+                                startCompleteTickerActivity();
+                                break;
+                        }
+                        return false;
+                    }
+                });
     }
 
     private void showProgressBar(){
@@ -83,6 +104,7 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
     }
 
     private void initUI(){
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         refreshBtn = findViewById(R.id.refresh_btn_history_activity);
         errorMsg = findViewById(R.id.error_msg_history_activity);
         recyclerView = findViewById(R.id.history_activity_recycler_view);
