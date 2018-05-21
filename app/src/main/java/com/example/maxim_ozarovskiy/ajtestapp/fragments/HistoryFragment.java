@@ -87,6 +87,12 @@ public class HistoryFragment extends Fragment implements HistoryContract.View {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.clearDisp();
+    }
+
+    @Override
     public void callbackDbRecords(List<DbModelEx> dbList) {
         showRecyclerView();
         setNewRecyclerAdapter(dbList);

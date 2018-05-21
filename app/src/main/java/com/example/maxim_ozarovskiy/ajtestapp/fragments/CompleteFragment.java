@@ -209,6 +209,11 @@ public class CompleteFragment extends Fragment implements CompleteTickerContract
         targetCurrencyValueTv.setText(value);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.clearDisp();
+    }
 
     @Override
     public void callbackConversionRequest(String targetValue, List<Market> marketList) {

@@ -60,12 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        /*if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }*/
         bottomNavigation = findViewById(R.id.bottom_navigation);
-        //delete bottom rows
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
         fragment = new MainFragment();
