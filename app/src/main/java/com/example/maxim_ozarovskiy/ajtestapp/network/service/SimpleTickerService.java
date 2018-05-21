@@ -2,6 +2,7 @@ package com.example.maxim_ozarovskiy.ajtestapp.network.service;
 
 import com.example.maxim_ozarovskiy.ajtestapp.model.SimpleTickerExample;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -13,5 +14,5 @@ import retrofit2.http.Path;
 public interface SimpleTickerService {
 
     @GET("ticker/{currency}")
-    Call<SimpleTickerExample> simpleTickerService(@Path("currency") String currency);
+    Observable<SimpleTickerExample> simpleTickerService(@Path("currency") String currency);
 }

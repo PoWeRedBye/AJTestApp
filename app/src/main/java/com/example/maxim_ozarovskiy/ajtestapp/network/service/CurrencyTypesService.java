@@ -2,7 +2,9 @@ package com.example.maxim_ozarovskiy.ajtestapp.network.service;
 
 import com.example.maxim_ozarovskiy.ajtestapp.model.CurrencyTypesExample;
 
-import retrofit2.Call;
+import java.util.ArrayList;
+
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 
 /**
@@ -12,5 +14,6 @@ import retrofit2.http.GET;
 public interface CurrencyTypesService {
 
     @GET("currencies")
-    Call<CurrencyTypesExample> currencyTypesService();
+    //Call<CurrencyTypesExample> currencyTypesService();
+    Observable<CurrencyTypesExample> currencyTypesService();
 }

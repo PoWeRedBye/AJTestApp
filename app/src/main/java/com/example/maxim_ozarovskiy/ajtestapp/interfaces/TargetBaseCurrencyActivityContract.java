@@ -14,11 +14,12 @@ public interface TargetBaseCurrencyActivityContract {
         void callbackCurrency(List<CurrencyTypes> currency);
         void callbackInputCurrency(List<CurrencyTypes> currency);
         void callbackHttpError(String error);
+
     }
 
     interface Presenter {
         void searchInputCurrency(List<CurrencyTypes> currency, String input);
         void getCurrency();
-
+        void clearDisp();
     }
 }

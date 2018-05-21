@@ -2,9 +2,8 @@ package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
 import android.content.Context;
 
-import com.example.maxim_ozarovskiy.ajtestapp.R;
 import com.example.maxim_ozarovskiy.ajtestapp.data.DataManager;
-import com.example.maxim_ozarovskiy.ajtestapp.interfaces.HistoryActivityContract;
+import com.example.maxim_ozarovskiy.ajtestapp.interfaces.HistoryContract;
 import com.example.maxim_ozarovskiy.ajtestapp.model.DbModelEx;
 import com.example.maxim_ozarovskiy.ajtestapp.model.SimpleTickerExample;
 import com.example.maxim_ozarovskiy.ajtestapp.network.RESTClient;
@@ -16,28 +15,31 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Maxim_Ozarovskiy on 11.12.2017.
  */
 
-public class HistoryActivityPresenter implements HistoryActivityContract.Presenter{
+public class HistoryPresenter implements HistoryContract.Presenter{
 
-    HistoryActivityContract.View view;
+    HistoryContract.View view;
     private DataManager dataManager;
     private Context context;
     private List<DbModelEx> dbList;
     private SimpleTickerExample simpleTickerExample;
+    private CompositeDisposable mCompositeDisposable;
 
     private String noInet = "No internet connection";
     private String usd = "usd";
     private String bitcoin = "btc";
     private String euro = "eur";
+    private String value = "1";
 
-    public HistoryActivityPresenter(Context ctx,HistoryActivityContract.View view) {
+    public HistoryPresenter(Context ctx, HistoryContract.View view) {
         this.context = ctx;
         this.view = view;
     }
@@ -50,6 +52,29 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
         setPreviewRecords();
     }
 
+    public Disposable addDisposable(Disposable disposable) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        mCompositeDisposable.add(disposable);
+        return disposable;
+    }
+
+    private void makeConversion(String base, String target) {
+        addDisposable(RESTClient.getInstance()
+                .getSimpleTickerService()
+                .simpleTickerService(base + "-" + target)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::getData));
+    }
+
+    private void getData(SimpleTickerExample simple) {
+        simpleTickerExample = simple;
+        convert(simpleTickerExample, value);
+    }
+
+
     private void setPreviewRecords(){
         if (dbList.size() == 0){
             makeConversion(euro,usd);
@@ -57,13 +82,13 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
             makeConversion(bitcoin, usd);
         } else if(dbList.size() == 2){
             makeConversion(bitcoin, euro);
-        } else if(dbList.size() >= 3){
+        } else {
             view.callbackDbRecords(dbList);
             dataManager.close();
         }
     }
 
-    private void makeConversion(String base, String target){
+   /* private void makeConversion(String base, String target){
         RESTClient.getInstance().getSimpleTickerService().simpleTickerService(base +"-" + target).enqueue(new Callback<SimpleTickerExample>() {
             @Override
             public void onResponse(Call<SimpleTickerExample> call, Response<SimpleTickerExample> response) {
@@ -79,7 +104,7 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
                 view.callbackErrorMsg(noInet);
             }
         });
-    }
+    }*/
 
     private void convert(SimpleTickerExample ste, String convertValue){
         double one = Double.parseDouble(ste.getSimpleTicker().getPrice());
@@ -96,6 +121,10 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
 
     }
 
+    private void sendDataToDbWithRX(String targetValue, String baseValue, SimpleTickerExample ste, String time){
+
+    }
+
     private void sendDataToDB(String targetValue, String baseValue, SimpleTickerExample ste, String time) {
         String targetName = ste.getSimpleTicker().getTarget();
         String targetPrice = ste.getSimpleTicker().getPrice();
@@ -106,8 +135,21 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
         getRecords();
     }
 
+    private void clearDisposable() {
+        if (mCompositeDisposable != null) {
+            if (mCompositeDisposable.size() >= 1) {
+                mCompositeDisposable.clear();
+            }
+        }
+    }
+
     @Override
     public void callDbRecords() {
         getRecords();
+    }
+
+    @Override
+    public void clearDisp() {
+        clearDisposable();
     }
 }

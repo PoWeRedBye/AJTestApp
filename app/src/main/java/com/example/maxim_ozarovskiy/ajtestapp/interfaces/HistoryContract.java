@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Maxim_Ozarovskiy on 11.12.2017.
  */
 
-public interface HistoryActivityContract {
+public interface HistoryContract {
 
     interface View {
         void callbackDbRecords(List<DbModelEx> dbList);
@@ -17,5 +17,6 @@ public interface HistoryActivityContract {
 
     interface Presenter {
         void callDbRecords();
+        void clearDisp();
     }
 }

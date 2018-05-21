@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -57,14 +58,13 @@ public class TargetBaseCurrencyActivity extends AppCompatActivity implements Tar
         }
         presenter = new TargetBaseCurrencyActivityPresenter(this);
         presenter.getCurrency();
-        refresh.setOnClickListener(new android.view.View.OnClickListener() {
-            @Override
-            public void onClick(android.view.View View) {
-                presenter.getCurrency();
-                invisible();
-            }
-        });
+        refresh.setOnClickListener(this::refreshClick);
 
+    }
+
+    private void refreshClick(View v){
+        presenter.getCurrency();
+        invisible();
     }
 
     private void visible(){
@@ -153,6 +153,12 @@ public class TargetBaseCurrencyActivity extends AppCompatActivity implements Tar
         onBackPressed();
         finish();
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.clearDisp();
     }
 
     @Override

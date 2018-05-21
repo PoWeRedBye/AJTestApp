@@ -2,9 +2,8 @@ package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
 import android.content.Context;
 
-import com.example.maxim_ozarovskiy.ajtestapp.R;
 import com.example.maxim_ozarovskiy.ajtestapp.data.DataManager;
-import com.example.maxim_ozarovskiy.ajtestapp.interfaces.CompleteTickerActivityContract;
+import com.example.maxim_ozarovskiy.ajtestapp.interfaces.CompleteTickerContract;
 import com.example.maxim_ozarovskiy.ajtestapp.model.CompleteTickerExample;
 import com.example.maxim_ozarovskiy.ajtestapp.model.Market;
 import com.example.maxim_ozarovskiy.ajtestapp.network.RESTClient;
@@ -15,17 +14,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Maxim_Ozarovskiy on 11.12.2017.
  */
 
-public class CompleteTickerActivityPresenter implements CompleteTickerActivityContract.Presenter {
+public class CompleteTickerPresenter implements CompleteTickerContract.Presenter {
 
-    CompleteTickerActivityContract.View view;
+    CompleteTickerContract.View view;
 
     private String noInet = "No internet connection";
     private String value;
@@ -33,13 +33,14 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
     private List<Market> marketList;
     private Context context;
     private DataManager dataManager;
+    private CompositeDisposable mCompositeDisposable;
 
-    public CompleteTickerActivityPresenter(Context ctx, CompleteTickerActivityContract.View view) {
+    public CompleteTickerPresenter(Context ctx, CompleteTickerContract.View view) {
         this.context = ctx;
         this.view = view;
     }
 
-    private void makeConversion(String base, String target){
+   /* private void makeConversion(String base, String target){
 
         RESTClient.getInstance().getCompleteTickerService().completeTickerService(base + "-" + target).enqueue(new Callback<CompleteTickerExample>() {
             @Override
@@ -60,6 +61,28 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
                 view.callbackErrorMessage(noInet);
             }
         });
+    }*/
+
+    public Disposable addDisposable(Disposable disposable) {
+        if (mCompositeDisposable == null) {
+            mCompositeDisposable = new CompositeDisposable();
+        }
+        mCompositeDisposable.add(disposable);
+        return disposable;
+    }
+
+    private void makeConversion(String base, String target) {
+        addDisposable(RESTClient.getInstance()
+                .getCompleteTickerService()
+                .completeTickerService(base + "-" + target)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::getData));
+    }
+
+    private void getData(CompleteTickerExample simple) {
+        completeTickerExample = simple;
+        convert(completeTickerExample, value);
     }
 
     private void convert(CompleteTickerExample cte, String value){
@@ -94,5 +117,18 @@ public class CompleteTickerActivityPresenter implements CompleteTickerActivityCo
     public void callConversion(String base, String target, String ConversionValue) {
         value = ConversionValue;
         makeConversion(base,target);
+    }
+
+    private void clearDisposable() {
+        if (mCompositeDisposable != null) {
+            if (mCompositeDisposable.size() >= 1) {
+                mCompositeDisposable.clear();
+            }
+        }
+    }
+
+    @Override
+    public void clearDisp() {
+        clearDisposable();
     }
 }
