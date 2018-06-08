@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/currency_exchange_icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".data.Database"> <!--RoomDatabase singleTon in our app-->
         <activity android:name=".activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
@@ -20,6 +21,7 @@
         </activity>
         <activity android:name=".activity.TargetBaseCurrencyActivity"
             android:label="@string/currency_activity"/>
+
     </application>
 
 </manifest>

@@ -3,8 +3,12 @@ package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
 import android.content.Context;
 
+import com.example.maxim_ozarovskiy.ajtestapp.data.AppDatabase;
 import com.example.maxim_ozarovskiy.ajtestapp.data.DataManager;
+import com.example.maxim_ozarovskiy.ajtestapp.data.Database;
+import com.example.maxim_ozarovskiy.ajtestapp.data.dao.DbModelExDao;
 import com.example.maxim_ozarovskiy.ajtestapp.interfaces.SimpleContract;
+import com.example.maxim_ozarovskiy.ajtestapp.model.DbModelEx;
 import com.example.maxim_ozarovskiy.ajtestapp.model.SimpleTickerExample;
 import com.example.maxim_ozarovskiy.ajtestapp.network.RESTClient;
 
@@ -13,6 +17,7 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -32,34 +37,13 @@ public class SimplePresenter implements SimpleContract.Presenter {
     private Context context;
     private DataManager dataManager;
     private CompositeDisposable mCompositeDisposable;
-
+    private AppDatabase database;
+    private DbModelExDao dao;
 
     public SimplePresenter(Context ctx, SimpleContract.View view) {
         this.context = ctx;
         this.view = view;
     }
-
-    /*private void makeConversion(String base, String target){
-        RESTClient.getInstance().getSimpleTickerService().simpleTickerService(base +"-" + target).enqueue(new Callback<SimpleTickerExample>() {
-            @Override
-            public void onResponse(Call<SimpleTickerExample> call, Response<SimpleTickerExample> response) {
-                if(response.isSuccessful()){
-                    if (response.body().getSuccess()){
-                        simpleTickerExample = response.body();
-                        convert(simpleTickerExample,value);
-                    } else {
-                        view.callbackErrorMessage(response.body().getError());
-                    }
-                }else {
-                    view.callbackErrorMessage(response.message());
-                }
-            }
-            @Override
-            public void onFailure(Call<SimpleTickerExample> call, Throwable t) {
-                    view.callbackErrorMessage(noInet);
-            }
-        });
-    }*/
 
     public Disposable addDisposable(Disposable disposable) {
         if (mCompositeDisposable == null) {
@@ -69,7 +53,7 @@ public class SimplePresenter implements SimpleContract.Presenter {
         return disposable;
     }
 
-    private void makeConversion(String base, String target) {
+    private void getServerRequest(String base, String target) {
         addDisposable(RESTClient.getInstance()
                 .getSimpleTickerService()
                 .simpleTickerService(base + "-" + target)
@@ -79,8 +63,12 @@ public class SimplePresenter implements SimpleContract.Presenter {
     }
 
     private void getData(SimpleTickerExample simple) {
-        simpleTickerExample = simple;
-        convert(simpleTickerExample, value);
+        if (simple.getSimpleTicker() == null){
+            view.callbackErrorMessage(simple.getError());
+        } else {
+            simpleTickerExample = simple;
+            convert(simpleTickerExample, value);
+        }
     }
 
     private void convert(SimpleTickerExample ste, String value) {
@@ -99,21 +87,36 @@ public class SimplePresenter implements SimpleContract.Presenter {
     }
 
     private void sendDataToDB(String targetValue, String baseValue, SimpleTickerExample ste, String time) {
-        dataManager = new DataManager(context);
-        dataManager.open();
+        database = Database.getInstance().getDatabase();
+        dao = database.dbModelExDao();
         String targetName = ste.getSimpleTicker().getTarget();
         String targetPrice = ste.getSimpleTicker().getPrice();
         String baseName = ste.getSimpleTicker().getBase();
         String baseCode = ste.getSimpleTicker().getBase();
         String targetCode = ste.getSimpleTicker().getTarget();
-        dataManager.saveNewConverterRequest(targetName, targetPrice, baseValue, baseName, baseCode, targetValue, targetCode, time);
-        dataManager.close();
+        DbModelEx db = new DbModelEx();
+        db.setBaseCurrencyCode(baseCode);
+        db.setBaseCurrencyName(baseName);
+        db.setBaseCurrencyValue(baseValue);
+        db.setDayTimeRequest(time);
+        db.setTargetCurrencyCode(targetCode);
+        db.setTargetCurrencyName(targetName);
+        db.setTargetCurrencyValue(targetValue);
+        db.setTargetCurrencyCourse(targetPrice);
+
+        Completable.fromAction(()-> dao.insert(db))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+
+
+
     }
 
     @Override
     public void callConversion(String base, String target, String conversionValue) {
         value = conversionValue;
-        makeConversion(base, target);
+        getServerRequest(base, target);
     }
 
     private void clearDisposable() {

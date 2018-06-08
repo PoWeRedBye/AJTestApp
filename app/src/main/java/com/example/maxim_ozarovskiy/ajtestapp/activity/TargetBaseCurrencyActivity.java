@@ -171,7 +171,7 @@ public class TargetBaseCurrencyActivity extends AppCompatActivity implements Tar
             setResult(SIMPLE_RESULT, intent);
             finish();
         } else if (requestNumber == COMPLETE_REQUEST){
-            Intent intent = new Intent(this, CompleteTickerActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("CurrencyTypes", currencyTypes);
             setResult(COMPLETE_RESULT,intent);
             finish();

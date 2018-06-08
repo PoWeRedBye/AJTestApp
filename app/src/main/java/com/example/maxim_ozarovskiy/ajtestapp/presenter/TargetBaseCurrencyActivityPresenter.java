@@ -31,34 +31,19 @@ public class TargetBaseCurrencyActivityPresenter implements TargetBaseCurrencyAc
     private CurrencyTypesExample currencyData;
     private CompositeDisposable mCompositeDisposable;
 
-    public TargetBaseCurrencyActivityPresenter(TargetBaseCurrencyActivityContract.View view){
+    public TargetBaseCurrencyActivityPresenter(TargetBaseCurrencyActivityContract.View view) {
         this.view = view;
     }
 
-    private void getDataList(CurrencyTypesExample dataList){
-        currencyTypesExample = new ArrayList<>();
-        currencyTypesExample.addAll(dataList.getCurrencyTypes());
-        view.callbackCurrency(currencyTypesExample);
+    private void getDataList(CurrencyTypesExample dataList) {
+        if (dataList.getCurrencyTypes() == null) {
+            view.callbackHttpError(noInet);
+        } else {
+            currencyTypesExample = new ArrayList<>();
+            currencyTypesExample.addAll(dataList.getCurrencyTypes());
+            view.callbackCurrency(currencyTypesExample);
+        }
     }
-
-    /*private void getCurrencyTypes() {
-        RESTClient.getInstance().getCurrencyTypesService().currencyTypesService().enqueue(new Callback<CurrencyTypesExample>() {
-            @Override
-            public void onResponse(Call<CurrencyTypesExample> call, Response<CurrencyTypesExample> response) {
-                if (response.isSuccessful()){
-                    currencyTypesExample = new ArrayList<>();
-                    currencyTypesExample.addAll(response.body().getCurrencyTypes());
-                    view.callbackCurrency(currencyTypesExample);
-                } else {
-                    view.callbackHttpError(response.message());
-                }
-            }
-            @Override
-            public void onFailure(Call<CurrencyTypesExample> call, Throwable t) {
-                view.callbackHttpError(noInet);
-            }
-        });
-    }*/
 
     public Disposable addDisposable(Disposable disposable) {
         if (mCompositeDisposable == null) {
@@ -67,8 +52,8 @@ public class TargetBaseCurrencyActivityPresenter implements TargetBaseCurrencyAc
         mCompositeDisposable.add(disposable);
         return disposable;
     }
-// еееее работает!!!
-    private void getCurrencyList(){
+
+    private void getCurrencyList() {
         addDisposable(RESTClient.getInstance()
                 .getCurrencyTypesService()
                 .currencyTypesService()
@@ -77,13 +62,13 @@ public class TargetBaseCurrencyActivityPresenter implements TargetBaseCurrencyAc
                 .subscribe(this::getDataList));
     }
 
-    private void clearDisposable(){
-        if (mCompositeDisposable.size() >= 1 ) {
+    private void clearDisposable() {
+        if (mCompositeDisposable.size() >= 1) {
             mCompositeDisposable.clear();
         }
     }
 
-    private void searchByCurrencyName(String input){
+    private void searchByCurrencyName(String input) {
         List<CurrencyTypes> newCurrencyList = new ArrayList<>();
         if (input == null) {
             view.callbackInputCurrency(currencyTypesExample);
@@ -91,9 +76,9 @@ public class TargetBaseCurrencyActivityPresenter implements TargetBaseCurrencyAc
             for (int i = 1; i <= currencyTypesExample.size() - 1; i++) {
                 if (currencyTypesExample.get(i).getCode().toLowerCase().contains(input)
                         || currencyTypesExample.get(i).getName().toLowerCase().contains(input)) {
-                    for (int j = newCurrencyList.size(); j>=0; j++){
-                    newCurrencyList.add(j, currencyTypesExample.get(i));
-                    break;
+                    for (int j = newCurrencyList.size(); j >= 0; j++) {
+                        newCurrencyList.add(j, currencyTypesExample.get(i));
+                        break;
                     }
                 }
             }
@@ -117,12 +102,5 @@ public class TargetBaseCurrencyActivityPresenter implements TargetBaseCurrencyAc
     public void clearDisp() {
         clearDisposable();
     }
-
-    /*public Observable<ArrayList<CurrencyTypesExample>> getModelsObservable() {
-        if (observableModelsList == null) {
-            curencyObservable();
-        }
-        return observableModelsList;
-    }*/
 
 }

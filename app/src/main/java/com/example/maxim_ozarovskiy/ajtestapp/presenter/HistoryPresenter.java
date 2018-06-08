@@ -2,7 +2,10 @@ package com.example.maxim_ozarovskiy.ajtestapp.presenter;
 
 import android.content.Context;
 
+import com.example.maxim_ozarovskiy.ajtestapp.data.AppDatabase;
 import com.example.maxim_ozarovskiy.ajtestapp.data.DataManager;
+import com.example.maxim_ozarovskiy.ajtestapp.data.Database;
+import com.example.maxim_ozarovskiy.ajtestapp.data.dao.DbModelExDao;
 import com.example.maxim_ozarovskiy.ajtestapp.interfaces.HistoryContract;
 import com.example.maxim_ozarovskiy.ajtestapp.model.DbModelEx;
 import com.example.maxim_ozarovskiy.ajtestapp.model.SimpleTickerExample;
@@ -15,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -24,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Maxim_Ozarovskiy on 11.12.2017.
  */
 
-public class HistoryPresenter implements HistoryContract.Presenter{
+public class HistoryPresenter implements HistoryContract.Presenter {
 
     HistoryContract.View view;
     private DataManager dataManager;
@@ -32,10 +36,11 @@ public class HistoryPresenter implements HistoryContract.Presenter{
     private List<DbModelEx> dbList;
     private SimpleTickerExample simpleTickerExample;
     private CompositeDisposable mCompositeDisposable;
+    private AppDatabase database;
+    private DbModelExDao dao;
 
     private String noInet = "No internet connection";
     private String usd = "usd";
-    private String bitcoin = "btc";
     private String euro = "eur";
     private String value = "1";
 
@@ -44,12 +49,22 @@ public class HistoryPresenter implements HistoryContract.Presenter{
         this.view = view;
     }
 
-    private void getRecords(){
-        dataManager = new DataManager(context);
-        dataManager.open();
+    private void getRecords() {
+        database = Database.getInstance().getDatabase();
+        dao = database.dbModelExDao();
+        addDisposable(dao.getAll().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::getDbData));
+
+    }
+
+    private void getDbData(List<DbModelEx> model) {
         dbList = new ArrayList<>();
-        dbList = dataManager.getHistory();
-        setPreviewRecords();
+        dbList = model;
+        if (dbList.size() == 0) {
+            makeConversion(euro, usd);
+        }
+        setRecords();
     }
 
     public Disposable addDisposable(Disposable disposable) {
@@ -70,43 +85,19 @@ public class HistoryPresenter implements HistoryContract.Presenter{
     }
 
     private void getData(SimpleTickerExample simple) {
-        simpleTickerExample = simple;
-        convert(simpleTickerExample, value);
-    }
-
-
-    private void setPreviewRecords(){
-        if (dbList.size() == 0){
-            makeConversion(euro,usd);
-        } else if(dbList.size() == 1) {
-            makeConversion(bitcoin, usd);
-        } else if(dbList.size() == 2){
-            makeConversion(bitcoin, euro);
+        if (simple.getSimpleTicker() == null) {
+            view.callbackErrorMsg(simple.getError());
         } else {
-            view.callbackDbRecords(dbList);
-            dataManager.close();
+            simpleTickerExample = simple;
+            convert(simpleTickerExample, value);
         }
     }
 
-   /* private void makeConversion(String base, String target){
-        RESTClient.getInstance().getSimpleTickerService().simpleTickerService(base +"-" + target).enqueue(new Callback<SimpleTickerExample>() {
-            @Override
-            public void onResponse(Call<SimpleTickerExample> call, Response<SimpleTickerExample> response) {
-                if(response.isSuccessful()){
-                    simpleTickerExample = response.body();
-                    convert(simpleTickerExample, "1");
-                }else {
-                    view.callbackErrorMsg(response.message());
-                }
-            }
-            @Override
-            public void onFailure(Call<SimpleTickerExample> call, Throwable t) {
-                view.callbackErrorMsg(noInet);
-            }
-        });
-    }*/
+    private void setRecords() {
+        view.callbackDbRecords(dbList);
+    }
 
-    private void convert(SimpleTickerExample ste, String convertValue){
+    private void convert(SimpleTickerExample ste, String convertValue) {
         double one = Double.parseDouble(ste.getSimpleTicker().getPrice());
         double two = Double.parseDouble(convertValue);
         double converted = two * one;
@@ -117,11 +108,7 @@ public class HistoryPresenter implements HistoryContract.Presenter{
         time.setTime(date * 1000);
         SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
         String formattedDate = format.format(time);
-        sendDataToDB(convertedValue,convertValue,simpleTickerExample,formattedDate);
-
-    }
-
-    private void sendDataToDbWithRX(String targetValue, String baseValue, SimpleTickerExample ste, String time){
+        sendDataToDB(convertedValue, convertValue, simpleTickerExample, formattedDate);
 
     }
 
@@ -131,7 +118,21 @@ public class HistoryPresenter implements HistoryContract.Presenter{
         String baseName = ste.getSimpleTicker().getBase();
         String baseCode = ste.getSimpleTicker().getBase();
         String targetCode = ste.getSimpleTicker().getTarget();
-        dataManager.saveNewConverterRequest(targetName,targetPrice,baseValue,baseName,baseCode,targetValue,targetCode,time);
+        DbModelEx db = new DbModelEx();
+        db.setBaseCurrencyCode(baseCode);
+        db.setBaseCurrencyName(baseName);
+        db.setBaseCurrencyValue(baseValue);
+        db.setDayTimeRequest(time);
+        db.setTargetCurrencyCode(targetCode);
+        db.setTargetCurrencyName(targetName);
+        db.setTargetCurrencyValue(targetValue);
+        db.setTargetCurrencyCourse(targetPrice);
+
+        Completable.fromAction(() -> dao.insert(db))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+
         getRecords();
     }
 

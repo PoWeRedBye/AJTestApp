@@ -1,19 +1,40 @@
 package com.example.maxim_ozarovskiy.ajtestapp.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 /**
  * Created by Maxim_Ozarovskiy on 11.12.2017.
  */
-
+@Entity
 public class DbModelEx {
 
+    @PrimaryKey(autoGenerate = true)
     private int id;
+
+    @ColumnInfo(name = "base_name")
     private String baseCurrencyName;
+
+    @ColumnInfo(name = "base_value")
     private String baseCurrencyValue;
+
+    @ColumnInfo(name = "target_name")
     private String targetCurrencyName;
+
+    @ColumnInfo(name = "target_value")
     private String targetCurrencyValue;
-    private String targetCyrrencyCourse;
+
+    @ColumnInfo(name = "target_course")
+    private String targetCurrencyCourse;
+
+    @ColumnInfo(name = "time")
     private String dayTimeRequest;
+
+    @ColumnInfo(name = "base_code")
     private String baseCurrencyCode;
+
+    @ColumnInfo(name = "target_code")
     private String targetCurrencyCode;
 
     public DbModelEx() {
@@ -59,12 +80,12 @@ public class DbModelEx {
         this.targetCurrencyValue = targetCurrencyValue;
     }
 
-    public String getTargetCyrrencyCourse() {
-        return targetCyrrencyCourse;
+    public String getTargetCurrencyCourse() {
+        return targetCurrencyCourse;
     }
 
-    public void setTargetCyrrencyCourse(String targetCyrrencyCourse) {
-        this.targetCyrrencyCourse = targetCyrrencyCourse;
+    public void setTargetCurrencyCourse(String targetCurrencyCourse) {
+        this.targetCurrencyCourse = targetCurrencyCourse;
     }
 
     public String getDayTimeRequest() {

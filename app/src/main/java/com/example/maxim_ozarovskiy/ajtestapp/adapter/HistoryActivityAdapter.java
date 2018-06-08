@@ -43,7 +43,7 @@ public class HistoryActivityAdapter extends RecyclerView.Adapter<HistoryActivity
         holder.targetCurrencyName.setText(historyList.get(pos).getTargetCurrencyName());
         holder.baseCurrencyValue.setText(historyList.get(pos).getBaseCurrencyValue());
         holder.targetCurrencyValue.setText(historyList.get(pos).getTargetCurrencyValue());
-        holder.targetCurrencyPrice.setText(historyList.get(pos).getTargetCyrrencyCourse());
+        holder.targetCurrencyPrice.setText(historyList.get(pos).getTargetCurrencyCourse());
     }
 
     @Override
